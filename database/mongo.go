@@ -10,7 +10,7 @@ import (
 )
 
 type MongoConnection struct {
-	db      *mongo.Database
+	DB *mongo.Database
 	Client  *mongo.Client
 	Context context.Context
 	Cancel  context.CancelFunc
@@ -34,7 +34,7 @@ func Connect(dbName string) *MongoConnection {
 	conn.Context = ctx
 	conn.Cancel = cancel
 	conn.Client = client
-	conn.db = client.Database(dbName)
+	conn.DB = client.Database(dbName)
 
 	log.Println("Successfully connected to MongoDB")
 
