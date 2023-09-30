@@ -1,0 +1,5 @@
+1. Make a better event. Add a base event.
+2. Make a rejected events filter.
+3. Make an ignored event filter.
+4. Make a journal.
+5. Make another event to process. Would also have to update message sender service.

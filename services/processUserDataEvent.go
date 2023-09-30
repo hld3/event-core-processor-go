@@ -3,6 +3,7 @@ package services
 import (
 	"log"
 
+	events "github.com/hld3/event-common-go/events"
 	"github.com/hld3/event-core-processor-go/database"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -15,21 +16,22 @@ const (
 
 var conn *database.MongoConnection
 
-type UserDataEvent struct {
-	NodeId   string `json:"nodeId"`
-	UserId   string `json:"userId"`
-	Username string `json:"username"`
-}
-
 type Executor interface {
-	Execute(event UserDataEvent)
+	Execute(event events.UserDataEvent)
 }
 
 type UserProcessingService struct{}
 
-func (s *UserProcessingService) Execute(event UserDataEvent) {
+func (s *UserProcessingService) Execute(event events.UserDataEvent) {
 	log.Println("Running user processing service")
-	userData := bson.M{"nodeId": event.NodeId, "username": event.Username, "userId": event.UserId}
+	userData := bson.M{
+		"nodeId":         event.NodeId,
+		"username":       event.Username,
+		"userId":         event.UserId,
+		"status":         event.Status,
+		"comment":        event.Comment,
+		"receiveUpdates": event.ReceiveUpdates,
+	}
 	collection := conn.DB.Collection(USER_DATA_COLLECTION)
 	_, err := collection.InsertOne(conn.Context, userData)
 	if err != nil {
@@ -41,7 +43,7 @@ func (s *UserProcessingService) Execute(event UserDataEvent) {
 
 type UserNodeCountService struct{}
 
-func (s *UserNodeCountService) Execute(event UserDataEvent) {
+func (s *UserNodeCountService) Execute(event events.UserDataEvent) {
 	log.Println("Running user node count service")
 	collection := conn.DB.Collection(NODE_COUNT_COLLECTION)
 
@@ -56,7 +58,7 @@ func (s *UserNodeCountService) Execute(event UserDataEvent) {
 	log.Println("User count updated for node:", event.NodeId)
 }
 
-func ProcessUserDataEvent(event UserDataEvent, db *database.MongoConnection) {
+func ProcessUserDataEvent(event events.UserDataEvent, db *database.MongoConnection) {
 	conn = db
 	services := []Executor{&UserProcessingService{}, &UserNodeCountService{}}
 	for _, service := range services {
