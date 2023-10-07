@@ -3,7 +3,7 @@ module github.com/hld3/event-core-processor-go
 go 1.21.1
 
 require (
-	github.com/hld3/event-common-go v1.0.2
+	github.com/hld3/event-common-go v1.0.5
 	github.com/streadway/amqp v1.1.0
 	go.mongodb.org/mongo-driver v1.12.1
 )
