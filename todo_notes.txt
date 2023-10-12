@@ -3,3 +3,8 @@
 3. Make an ignored event filter.
 4. Make a journal.
 5. Make another event to process. Would also have to update message sender service.
+
+#practice requests
+curl -X POST http://127.0.0.1:8080/userData -H "Content-Type: application/json" -d '{"messageId": "2", "dateCode": "tomorrow", "payload": {"nodeId": "33", "userId": "33", "username": "hld33", "status": "dead", "comment": "RIP", "receiveUpdates": false}}'
+
+curl -X POST http://127.0.0.1:8080/groupData -H "Content-Type: application/json" -d '{"messageId": "1", "dateCode": "today", "payload": {"name": "This group sucks", "code": "33", "groupId": "123", "ownerId": "321", "learningLanguage": "Chinese", "knownLanguage": "English"}}'
